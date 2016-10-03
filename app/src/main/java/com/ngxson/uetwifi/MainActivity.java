@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -29,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
     private View mProgressView;
     private View mLoginFormView;
     SharedPreferences sharedPref;
+    Button testBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        testBtn = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,7 +99,20 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
         TextView tv = (TextView) findViewById(R.id.madeby);
         tv.setText( Html.fromHtml("Made by <a href=\"http://www.facebook.com/ngxson\">Nui Nui</a> with ♥"));
         tv. setMovementMethod(LinkMovementMethod.getInstance());
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
+        //pref
+        sharedPref = this.getSharedPreferences("MYPREF", Context.MODE_PRIVATE);
+        String user = sharedPref.getString("uet_user", "");
+        String pass = sharedPref.getString("uet_pass", "");
+        mEmailView.setText(user);
+        mPasswordView.setText(pass);
+        if (TextUtils.isEmpty(user) && TextUtils.isEmpty(pass))
+            testBtn.setVisibility(View.GONE);
+    }
+
+    public void thudangnhap(View v) {
+        Intent intent = new Intent(this, LoginUETWifi.class);
+        startActivity(intent);
     }
 
     /**
@@ -135,6 +152,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
             focusView = mEmailView;
             cancel = true;
         }
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -143,13 +165,15 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            testBtn.setVisibility(View.VISIBLE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("uet_user", email);
             editor.putString("uet_pass", password);
             editor.commit();
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            Toast.makeText(this, "Đã lưu", Toast.LENGTH_SHORT).show();
+            //showProgress(true);
+            //mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask.execute((Void) null);
         }
     }
 
