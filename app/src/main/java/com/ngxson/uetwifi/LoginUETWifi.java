@@ -8,24 +8,36 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class LoginUETWifi extends AppCompatActivity {
 
+    final boolean DEBUG = true;
     final String REDIRECTTO = "http://ngxson.github.io/uet/okay_wifi.html";
     WebView webview;
+    EditText ed_ct;
+    EditText ed_ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_uetwifi);
         //data == html data which you want to load
+
+        LinearLayout ll = (LinearLayout) findViewById(R.id.wvdebug);
+        ed_ct = (EditText) findViewById(R.id.wvcontent);
+        ed_ad = (EditText) findViewById(R.id.wvaddress);
+
+        if(DEBUG) ll.setVisibility(View.VISIBLE);
 
         SharedPreferences sharedPref = this.getSharedPreferences("MYPREF", Context.MODE_PRIVATE);
         String user = sharedPref.getString("uet_user", "username");
@@ -84,6 +96,15 @@ public class LoginUETWifi extends AppCompatActivity {
         });
     }
 
+    public void debugWV(View v) {
+        String ed_cttext = ed_ct.getText().toString();
+        String ed_adtext = ed_ad.getText().toString();
+        if(!TextUtils.isEmpty(ed_cttext))
+            webview.loadDataWithBaseURL("", ed_cttext, "text/html", "UTF-8", "");
+        if(!TextUtils.isEmpty(ed_adtext))
+            webview.loadUrl(ed_adtext);
+    }
+
     void finishdelayed() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -118,6 +139,6 @@ public class LoginUETWifi extends AppCompatActivity {
 
     void kill_activity()
     {
-        finish();
+        if(!DEBUG) finish();
     }
 }
