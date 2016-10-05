@@ -19,6 +19,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginUETWifi extends AppCompatActivity {
 
     final boolean DEBUG = true;
@@ -62,10 +73,13 @@ public class LoginUETWifi extends AppCompatActivity {
                 pass+"\";</script><form method=\"post\" action=\"https://fw.uet.vnu.edu.vn:8003/index.php?zone=cpzone\"> <input name=\"redirurl\" type=\"hidden\" value=\""+
                 REDIRECTTO+"\"><input name=\"auth_user\" type=\"text\"><input name=\"auth_pass\" type=\"password\"><input name=\"accept\" type=\"hidden\" value=\"Continue\"><input name=\"accept\" type=\"submit\" value=\"Continue\"></form><script>document.getElementsByTagName(\"input\")[1].value=MSSV;document.getElementsByTagName(\"input\")[2].value=PASS;setTimeout(function() {document.getElementsByTagName(\"form\")[0].submit();}, "+
                 "5000"+");</script></body></html>";
-
         webview = (WebView)this.findViewById(R.id.webView);
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
+        //webview.loadUrl("https://fw.uet.vnu.edu.vn:8003/index.php?zone=cpzone");
+        //webview.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
+        FormPostVolley post = new FormPostVolley();
+        post.postNewComment(this, user,pass);
+
         webview.setWebViewClient(new WebViewClient()
         {
             @Override
@@ -142,3 +156,4 @@ public class LoginUETWifi extends AppCompatActivity {
         if(!DEBUG) finish();
     }
 }
+

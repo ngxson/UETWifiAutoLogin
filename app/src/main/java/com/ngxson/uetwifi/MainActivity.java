@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<C
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        testBtn = (Button) findViewById(R.id.email_sign_in_button);
+        testBtn = (Button) findViewById(R.id.test_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
